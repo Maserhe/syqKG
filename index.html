@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts知识图谱节点可视化</title>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <!-- 引入 Bootstrap 样式 -->
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+
+    <!-- 引入 jQuery 和 Bootstrap JavaScript -->
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
+</head>
+<body>
+    <div id="main" style="width: 100%;height: 1200px; background-color: burlywood;"></div>
+    <!-- 弹窗内容 -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">这是一个弹窗</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- 弹窗目录列表 -->
+              <ul id="modal-list" class="list-group"></ul>
+            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭弹窗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 弹窗文章 -->
+      <div class="modal fade" id="myArticle" style="background-color: #fff;" tabindex="-1" role="dialog" aria-labelledby="myAritcleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myAritcleLabel">章节内容</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="html-output">
+                
+              </div>
+          </div>
+        </div>
+      </div>
+
+    <script>
+        // 定义目录
+        var articleDirectory = [
+            {name: '计算逻辑', data:[{name: '第一章', dir: './评价.md'}, {name: '第二章', dir: './评价.md'}]},
+            {name: '形式逻辑', data:[{name: '第一章', dir: './评价.md'}, {name: '第一章', dir: './评价.md'}]},
+            {name: '数理逻辑', data:[{name: '第一章', dir: './评价.md'}, {name: '第一章', dir: './评价.md'}]},
+            {name: '二值逻辑', data:[{name: '第一章', dir: './评价.md'}, {name: '第一章', dir: './评价.md'}]},
+            {name: '逻辑问题', data:[{name: '第一章', dir: './评价.md'}, {name: '第一章', dir: './评价.md'}]},
+            {name: '逻辑演算', data:[{name: '第一章', dir: './评价.md'}, {name: '第一章', dir: './评价.md'}]}
+        ]
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // 节点名字数组
+        var nodeNames = [{ name:"计算逻辑", time: "2021-01-01" }, 
+            { name:"形式逻辑", time: "2021-01-01" }, 
+            { name:"数理逻辑", time: "2021-01-01" }, 
+            { name:"二值逻辑", time: "2021-01-01" }, 
+            { name:"逻辑问题", time: "2021-01-01" }, 
+            { name:"逻辑演算", time: "2021-01-01" }];
+
+        // 生成data数组
+        var data = [];
+        for (var i = 0; i < nodeNames.length; i++) {
+            var color = '#' + Math.floor(Math.random() * 16777215).toString(16); // 随机生成颜色
+            data.push({
+                name: nodeNames[i].name,
+                symbol: 'circle',
+                symbolSize: 60,
+                draggable: true,
+                itemStyle: {
+                    color: color
+                },
+                value: nodeNames[i],
+                label: nodeNames[i].time
+            });
+        }
+
+        // 指定图表的配置项和数据
+        var option = {
+            tooltip: {},
+            animationDurationUpdate: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series: [
+                {
+                    type: 'graph',
+                    layout: 'force',
+                    force: {
+                        repulsion: 100,
+                        // 连线长度
+                        edgeLength: 100
+                    },
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true,
+                                formatter: function(params) {
+                                    return params.data.name || params.data.value;
+                                }
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                formatter: function(params) {
+                                    return params.data.name || params.data.value;
+                                }
+                            }
+                        }
+                    },
+                    edgeSymbol: ['none', 'arrow'],
+                    symbolSize: 50,
+                    roam: true,
+                    label: {
+                        normal: {
+                            show: true,
+                            formatter: function(params) {
+                                return params.data.name + '\n' + params.data.label;
+                            },
+                            textStyle: {
+                                color: '#FFF',
+                                fontSize: 12,
+                                fontWeight: 'normal'
+                            }
+                        },
+                        
+                    },
+                    lineStyle: {
+                        normal: {
+                            width: 6,
+                            curveness: 0
+                        }
+                    },
+                    data: data,
+                    links: [
+                        {
+                            source: '计算逻辑',
+                            target: '形式逻辑'
+                        },
+                        {
+                            source: '形式逻辑',
+                            target: '数理逻辑'
+                        },
+                        {
+                            source: '数理逻辑',
+                            target: '二值逻辑'
+                        },
+                        {
+                            source: '二值逻辑',
+                            target: '逻辑问题'
+                        },
+                        {
+                            source: '逻辑问题',
+                            target: '逻辑演算'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+        var converter = new showdown.Converter();
+
+        myChart.on('click', function(params) {
+            if (params.dataType === 'node') {
+                // alert(params.data.value);
+                // 将传递的数据存储在变量中
+    			var modalData = params.data.name
+                // 这里可以根据节点的 value 属性跳转到相应的目录页面
+                // 获取 Modal 对象
+                var modal = document.getElementById('myModal');
+                // 弹窗显示 节点数据
+                var model_label = document.getElementById('myModalLabel');
+                // 弹窗中 的列表数据
+                // 遍历数组数据，并将其添加到弹窗中
+                var modalList = document.getElementById('modal-list');
+			    modalList.innerHTML = '';
+                directory = articleDirectory.find(item =>{return item.name==params.data.name})
+
+                // console.log(directory, params.data.name)
+                for (var i = 0; i < directory.data.length; i++) {
+                    var listItem = document.createElement('li');
+                    listItem.innerHTML = directory.data[i].name + '<span class="right-arrow" style="">&#9658;</span>';
+                    listItem.data = directory.data[i]
+                    listItem.className = "list-group-item"
+                    // 为 li 元素定义一个函数
+                    listItem.addEventListener('click', function() {
+                        // alert(this.data);
+                        // 加载本地 Markdown 文件
+                        fetch(this.data.dir)
+                            .then(function(response) {
+                                return response.text();
+                            })
+                            .then(function(markdown) {
+                                // 将 Markdown 转换为 HTML 并显示在页面上
+                                document.getElementById("html-output").innerHTML = converter.makeHtml(markdown);
+                                var article = document.getElementById('myArticle')
+                                $(article).modal('show');
+                            });
+                    });
+                    modalList.appendChild(listItem);
+                }
+                model_label.innerHTML = modalData;
+                // 显示 Modal
+                $(modal).modal('show');
+            }
+        });
+    </script>
+</body>
+<style>
+.modal-content {
+  background-color: #fff; /* 设置背景色为白色 */
+  opacity: 1; /* 设置不透明度为 1，即完全不透明 */
+}
+</style>
+</html>
