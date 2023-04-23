@@ -56,23 +56,81 @@
     <script>
         // 定义目录
         var articleDirectory = [
-            {name: '计算逻辑', data:[{name: '第一章', dir: './mdsrc/评价.md'}, {name: '第二章', dir: './mdsrc/评价.md'}]},
-            {name: '形式逻辑', data:[{name: '第一章', dir: './mdsrc/评价.md'}, {name: '第一章', dir: './mdsrc/评价.md'}]},
-            {name: '数理逻辑', data:[{name: '第一章', dir: './mdsrc/评价.md'}, {name: '第一章', dir: './mdsrc/评价.md'}]},
-            {name: '二值逻辑', data:[{name: '第一章', dir: './mdsrc/评价.md'}, {name: '第一章', dir: './mdsrc/评价.md'}]},
-            {name: '逻辑问题', data:[{name: '第一章', dir: './mdsrc/评价.md'}, {name: '第一章', dir: './mdsrc/评价.md'}]},
-            {name: '逻辑演算', data:[{name: '第一章', dir: './mdsrc/评价.md'}, {name: '第一章', dir: './mdsrc/评价.md'}]}
+            {
+                name: '科学的起源', 
+                data:
+                [
+                    {name: '第一章 希腊城邦文明：科学的诞生地', dir: './mdsrc/kxdqy/1.md'}, 
+                    {name: '第二章 米利都学派：寻求万物的始基', dir: './mdsrc/kxdqy/2.md'},
+                    {name: '第三章 毕达哥拉斯学派：数即万物', dir: './mdsrc/kxdqy/3.md'},
+                    {name: '第四章 柏拉图学园：不懂几何者不得入内', dir: './mdsrc/kxdqy/4.md'},
+                    {name: '第五章 亚里士多德的物理学：物性的科学', dir: './mdsrc/kxdqy/5.md'},
+                    {name: '第六章 希腊数理天文学：古代科学的范本', dir: './mdsrc/kxdqy/6.md'},
+                ]
+            },
+            {
+                name: '形式逻辑', 
+                data:
+                [
+                    {name: '第一章', dir: './mdsrc/评价.md'}, 
+                    {name: '第一章', dir: './mdsrc/评价.md'}
+                ]
+            },
+            {
+                name: '数理逻辑', 
+                data:
+                [
+                    {name: '第一章', dir: './mdsrc/评价.md'}, 
+                    {name: '第一章', dir: './mdsrc/评价.md'}
+                ]
+            },
+            {
+                name: '计算逻辑', 
+                data:
+                [
+                    {name: '第一章', dir: './mdsrc/评价.md'}, 
+                    {name: '第二章', dir: './mdsrc/评价.md'}
+                ]
+            },
+            {
+                name: '自动机理论', 
+                data:
+                [
+                    {name: '第一章', dir: './mdsrc/评价.md'}, 
+                    {name: '第一章', dir: './mdsrc/评价.md'}
+                ]
+            },
+            {
+                name: '算法', 
+                data:
+                [
+                    {name: '第一章', dir: './mdsrc/评价.md'}, 
+                    {name: '第一章', dir: './mdsrc/评价.md'}
+                ]
+            },
+            {
+                name: '模糊逻辑', 
+                data:
+                [
+                    {name: '第一章', dir: './mdsrc/评价.md'}, 
+                    {name: '第一章', dir: './mdsrc/评价.md'}
+                ]
+            }
         ]
 
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
         // 节点名字数组
-        var nodeNames = [{ name:"计算逻辑", time: "2021-01-01" }, 
-            { name:"形式逻辑", time: "2021-01-01" }, 
-            { name:"数理逻辑", time: "2021-01-01" }, 
-            { name:"二值逻辑", time: "2021-01-01" }, 
-            { name:"逻辑问题", time: "2021-01-01" }, 
-            { name:"逻辑演算", time: "2021-01-01" }];
+        var nodeNames = [
+            { name:"科学的起源", label: ""},
+            { name:"形式逻辑", time: "" }, 
+            { name:"数理逻辑", time: "" }, 
+            { name:"计算逻辑", time: "" },
+            { name:"自动机理论", time: "" }, 
+            { name:"算法", time: "" }, 
+            { name:"模糊逻辑", time: "" },
+        
+        ];
 
         // 生成data数组
         var data = [];
@@ -81,7 +139,7 @@
             data.push({
                 name: nodeNames[i].name,
                 symbol: 'circle',
-                symbolSize: 60,
+                symbolSize: 100,
                 draggable: true,
                 itemStyle: {
                     color: color
@@ -101,9 +159,9 @@
                     type: 'graph',
                     layout: 'force',
                     force: {
-                        repulsion: 100,
+                        repulsion: 1800,
                         // 连线长度
-                        edgeLength: 100
+                        edgeLength: 120
                     },
                     itemStyle: {
                         normal: {
@@ -130,26 +188,27 @@
                         normal: {
                             show: true,
                             formatter: function(params) {
-                                return params.data.name + '\n' + params.data.label;
+                                return params.data.name //+ '\n' + params.data.label;
                             },
                             textStyle: {
-                                color: '#FFF',
-                                fontSize: 12,
-                                fontWeight: 'normal'
+                                color: '#edf8fa',
+                                fontSize: 18,
+                                fontWeight: 'bold'
                             }
                         },
                         
                     },
                     lineStyle: {
                         normal: {
-                            width: 6,
-                            curveness: 0
+                            width: 5,
+                            curveness: 0,
+                            color: '#000'
                         }
                     },
                     data: data,
                     links: [
                         {
-                            source: '计算逻辑',
+                            source: '科学的起源',
                             target: '形式逻辑'
                         },
                         {
@@ -158,16 +217,21 @@
                         },
                         {
                             source: '数理逻辑',
-                            target: '二值逻辑'
+                            target: '计算逻辑'
                         },
                         {
-                            source: '二值逻辑',
-                            target: '逻辑问题'
+                            source: '计算逻辑',
+                            target: '自动机理论'
                         },
                         {
-                            source: '逻辑问题',
-                            target: '逻辑演算'
+                            source: '自动机理论',
+                            target: '算法'
+                        },
+                        {
+                            source: '算法',
+                            target: '模糊逻辑'
                         }
+
                     ]
                 }
             ]
@@ -226,7 +290,7 @@
 </body>
 <style>
 .modal-content {
-  background-color: #fff; /* 设置背景色为白色 */
+  background-color: #ffffff; /* 设置背景色为白色 */
   opacity: 1; /* 设置不透明度为 1，即完全不透明 */
 }
 </style>
