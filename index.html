@@ -165,13 +165,13 @@
         var myChart = echarts.init(document.getElementById('main'));
         // 节点名字数组
         var nodeNames = [
-            { name:"科学的起源", label: ""},
-            { name:"形式逻辑", time: "" }, 
-            { name:"数理逻辑", time: "" }, 
-            { name:"计算逻辑", time: "" },
-            { name:"自动机理论", time: "" }, 
+            { name:"科学的起源", time: "公元前469"},
+            { name:"形式逻辑", time: "公元1646" }, 
+            { name:"数理逻辑", time: "公元1815" }, 
+            { name:"计算逻辑", time: "公元1862" },
+            { name:"自动机理论", time: "1948年" }, 
             { name:"算法", time: "" }, 
-            { name:"模糊逻辑", time: "" },
+            { name:"模糊逻辑", time: "1965年" },
         
         ];
 
@@ -231,7 +231,7 @@
                         normal: {
                             show: true,
                             formatter: function(params) {
-                                return params.data.name //+ '\n' + params.data.label;
+                                return params.data.name + '\n' + params.data.label;
                             },
                             textStyle: {
                                 color: '#edf8fa',
